@@ -23,6 +23,7 @@ function App() {
       })
     } else {
       console.log("Invalid Credintials");
+      setError("Invalid Credintials");
     }
   }
 
