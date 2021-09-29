@@ -1,5 +1,5 @@
 
-import './App.css';
+import './App.scss';
 import { useState } from 'react';
 import LoginForm from './components/Login/LoginForm';
 
