@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState } from 'react/cjs/react.development'
+ import UserRegistrationForm from "../UserRegisteration/UserRegisterationForm";
+import { BrowserRouter, Link, Route  } from 'react-router-dom';
 
 function LoginForm({Login, error }) {
   const [details, setDetails] = useState({email: "", password: ""});
-
+  
   const submitHandler = e => {
     e.preventDefault();
 
@@ -24,6 +26,14 @@ function LoginForm({Login, error }) {
                 <input type="password" name="password" id="password" onChange = {e => setDetails({...details, password: e.target.value})} value={details.password}/>
             </div>
             <input type="submit" value="Login"></input>
+            <BrowserRouter>
+              <Link to = "../UserRegisteration/UserRegisterationForm">SignUp</Link>
+              <Route
+                    path="/UserRegisteration/UserRegisterationForm"
+                    component={UserRegistrationForm}
+                    exact 
+                />
+            </BrowserRouter>
         </div>
     </form>
   )
