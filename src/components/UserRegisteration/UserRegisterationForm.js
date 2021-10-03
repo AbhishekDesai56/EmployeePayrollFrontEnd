@@ -22,6 +22,9 @@ const UserRegistrationForm = () => {
                 <TextField label="Password" placeholder="Enter your Password" type="password"  variant="outlined" margin="normal" fullWidth required/>
                 <TextField label="Confirm Password" placeholder="Enter your Confirm Password" type="password"  variant="outlined" margin="normal" fullWidth required/>
                 <Button type="submit" style={btnStyle} color="primary" variant="contained" fullWidth>Sign In</Button>
+                 <Typography> 
+                    <Link href="/">Sign In Instead</Link>
+                 </Typography>
             </form>
         </Paper>
     </Grid>
