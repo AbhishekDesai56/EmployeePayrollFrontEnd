@@ -1,5 +1,5 @@
-import React from 'react'
-import {Grid, Paper, Avatar,TextField, Button, Link, Typography} from "@material-ui/core";
+import React from 'react';
+import {Grid, Paper, Avatar,TextField, Button, Typography,Link} from "@material-ui/core";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const LoginForm = () => {
@@ -17,7 +17,7 @@ const LoginForm = () => {
           <TextField label="Password" placeholder="Enter your Password" type="password"  variant="outlined" margin="normal" fullWidth required/>
           <Button type="submit" style={btnStyle} color="primary" variant="contained" fullWidth>Sign In</Button>
           <Typography> Do you have an account?
-            <Link href="#">Sign Up</Link>
+            <Link href="/UserRegisteration/">Sign Up</Link>
           </Typography>
       </Paper>
     </Grid>
