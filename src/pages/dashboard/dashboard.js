@@ -118,6 +118,9 @@ class Dashboard extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  logout = () => {
+    sessionStorage.clear();
+  };
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
@@ -178,7 +181,7 @@ class Dashboard extends React.Component {
                 open={open}
                 onClose={this.handleClose}
               >
-                <MenuItem>
+                <MenuItem onClick={this.logout}>
                   <Typography>
                     <Link href="/">Logout</Link>
                   </Typography>
