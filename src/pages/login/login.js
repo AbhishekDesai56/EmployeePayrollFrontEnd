@@ -1,3 +1,4 @@
+import "../../pages/login/login.scss";
 import React from "react";
 import {
   Grid,
@@ -28,9 +29,11 @@ const Login = () => {
       email: values.email,
       password: values.password,
     };
+
     EmployeeService.login(data)
       .then((response) => {
         if (response.data.success === true) {
+          sessionStorage.setItem("token", response.data.token);
           setTimeout(() => {
             history.push("/Dashboard");
           }, 2000);
@@ -72,6 +75,7 @@ const Login = () => {
           </Avatar>
           <h2>Sign In</h2>
         </Grid>
+
         <Formik
           initialValues={initialValues}
           onSubmit={onSumbit}
