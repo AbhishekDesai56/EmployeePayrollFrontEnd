@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
+import Link from "@material-ui/core/Link";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -177,8 +178,11 @@ class Dashboard extends React.Component {
                 open={open}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                <MenuItem>
+                  <Typography>
+                    <Link href="/">Logout</Link>
+                  </Typography>
+                </MenuItem>
               </Menu>
             </div>
           </Toolbar>
