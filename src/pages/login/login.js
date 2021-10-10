@@ -1,4 +1,3 @@
-import "../../pages/login/login.scss";
 import React from "react";
 import {
   Grid,
@@ -16,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import EmployeeService from "../../services/employee.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./login.scss";
 
 const Login = () => {
   const history = useHistory();
@@ -68,9 +68,9 @@ const Login = () => {
 
   return (
     <Grid>
-      <Paper elevation={10} className="paperStyle">
+      <Paper elevation={10} className="loginContainer">
         <Grid align="center">
-          <Avatar className="avatarStyle">
+          <Avatar className="avatarContainer">
             <LockOutlinedIcon />
           </Avatar>
           <h2>Sign In</h2>
