@@ -17,6 +17,10 @@ class EmployeeService {
   getAllEmployees = () => {
     return http.get("/getEmployees", header);
   };
+
+  createEmployee = (data) => {
+    return http.post("/createEmployee", data, header);
+  };
 }
 
 export default new EmployeeService();
