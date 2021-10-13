@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Paper from "@mui/material/Paper";
 import EmployeeService from "../../services/employee.service";
 import { Link } from "react-router-dom";
+
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   useEffect(() => {
@@ -50,6 +51,15 @@ const EmployeeList = () => {
     },
   }));
 
+  const handleDelete = (id) => {
+    EmployeeService.deleteEmployee(id)
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -83,7 +93,11 @@ const EmployeeList = () => {
                 <Button component={Link} to={`editemployee/${employee._id}`}>
                   <EditIcon />
                 </Button>
-                <Button>
+                <Button
+                  onClick={() => {
+                    handleDelete(employee._id);
+                  }}
+                >
                   <DeleteIcon color="secondary" />
                 </Button>
               </StyledTableCell>
