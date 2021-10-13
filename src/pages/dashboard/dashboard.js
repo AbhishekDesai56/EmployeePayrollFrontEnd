@@ -77,22 +77,22 @@ const styles = (theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: theme.spacing.unit * 7 + 1,
+    width: theme.spacing(7) + 1,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9 + 1,
+      width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
     display: "flex",
     alignItems: "center",
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     justifyContent: "flex-end",
     padding: "0 8px",
     ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
   grow: {
     flexGrow: 1,
@@ -129,13 +129,7 @@ class Dashboard extends React.Component {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar
-          position="fixed"
-          className={classes.appBar}
-          fooJon={classNames(classes.appBar, {
-            [classes.appBarShift]: this.state.open,
-          })}
-        >
+        <AppBar position="fixed" className={classes.appBar}>
           <Toolbar disableGutters={true}>
             <IconButton
               color="inherit"
@@ -207,12 +201,14 @@ class Dashboard extends React.Component {
         >
           <div className={classes.toolbar} />
           <List>
-            {["Inbox"].map((text, index) => (
+            {["Add Employee"].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <Link href="/addEmployee">
+                  <ListItemText primary={text} />
+                </Link>
               </ListItem>
             ))}
           </List>
