@@ -30,6 +30,10 @@ class EmployeeService {
   updateEmployee = (id, data) => {
     return http.put(`/updateEmployeeDetail/${id}`, data, header);
   };
+
+  deleteEmployee = (id) => {
+    return http.delete(`/deleteEmployeeById/${id}`, header);
+  };
 }
 
 export default new EmployeeService();
