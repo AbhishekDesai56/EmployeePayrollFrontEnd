@@ -18,8 +18,17 @@ class EmployeeService {
     return http.get("/getEmployees", header);
   };
 
+  getEmployeeId = (id) => {
+    id = id || "";
+    return http.get(`/getEmployeeById/${id}`, header);
+  };
+
   createEmployee = (data) => {
     return http.post("/createEmployee", data, header);
+  };
+
+  updateEmployee = (id, data) => {
+    return http.put(`/updateEmployeeDetail/${id}`, data, header);
   };
 }
 
