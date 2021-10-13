@@ -34,8 +34,9 @@ const Login = () => {
       .then((response) => {
         if (response.data.success === true) {
           sessionStorage.setItem("token", response.data.token);
+          console.log(sessionStorage.getItem("token"));
           setTimeout(() => {
-            history.push("/Dashboard");
+            history.push("/dashboard");
           }, 2000);
           toast.success(response.data.message, {
             position: "bottom-right",
