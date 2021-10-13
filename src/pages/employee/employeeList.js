@@ -6,12 +6,14 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Paper from "@mui/material/Paper";
 import EmployeeService from "../../services/employee.service";
-
+import { Link } from "react-router-dom";
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
-
   useEffect(() => {
     getAllEmployees();
   }, []);
@@ -20,7 +22,6 @@ const EmployeeList = () => {
     await EmployeeService.getAllEmployees()
       .then((response) => {
         if (response.data.success === true) {
-          console.log(response.data);
           setEmployees(response.data.data);
         }
       })
@@ -60,6 +61,7 @@ const EmployeeList = () => {
             <StyledTableCell align="right">Salary</StyledTableCell>
             <StyledTableCell align="right">Start Date</StyledTableCell>
             <StyledTableCell align="right">Note</StyledTableCell>
+            <StyledTableCell></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -77,6 +79,14 @@ const EmployeeList = () => {
                 {employee.startDate}
               </StyledTableCell>
               <StyledTableCell align="right">{employee.note}</StyledTableCell>
+              <StyledTableCell align="right">
+                <Button component={Link} to={`editemployee/${employee._id}`}>
+                  <EditIcon />
+                </Button>
+                <Button>
+                  <DeleteIcon color="secondary" />
+                </Button>
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
