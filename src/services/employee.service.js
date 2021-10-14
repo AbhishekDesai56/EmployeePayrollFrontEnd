@@ -1,7 +1,7 @@
 import http from "../http-common.js";
 let token = sessionStorage.getItem("token");
 
-const header = {
+let header = {
   headers: { token: token },
 };
 
@@ -15,6 +15,10 @@ class EmployeeService {
   }
 
   getAllEmployees = () => {
+    token = sessionStorage.getItem("token");
+    header = {
+      headers: { token: token },
+    };
     return http.get("/getEmployees", header);
   };
 
