@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
-import FormikControl from "./formikControl";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
@@ -9,9 +8,21 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./addEmployee.scss";
 import { format } from "date-fns";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+import Radio from "@mui/material/Radio";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import Stack from "@mui/material/Stack";
+
 const AddEmployee = () => {
   const history = useHistory();
-
+  const [setDateValue, setValue] = React.useState(new Date());
   const initialValues = {
     name: "",
     gender: "",
@@ -25,23 +36,29 @@ const AddEmployee = () => {
     { key: "Male", value: "Male" },
     { key: "Female", value: "Female" },
   ];
-
-  const checkboxOptions = [
-    { key: "HR", value: "HR" },
-    { key: "Sales", value: "Sales" },
-    { key: "Marketing", value: "Marketing" },
-    { key: "Finance", value: "Finance" },
+  const userData = [
+    { name: "HR", isChecked: false },
+    { name: "Sales", isChecked: false },
+    { name: "Marketing", isChecked: false },
+    { name: "Finance", isChecked: false },
   ];
 
+  const handleChangeDate = (newValue) => {
+    setValue(newValue);
+  };
+
   const onSumbit = (values, props) => {
+    values.department = users;
+    values.startDate = setDateValue;
     let data = {
       name: values.name,
       gender: values.gender,
       department: values.department,
-      salary: values.salary,
+      salary: String(values.salary),
       startDate: format(values.startDate, "dd MMM yyyy"),
       note: values.note,
     };
+    console.log(data);
     EmployeeService.createEmployee(data)
       .then((response) => {
         if (response.data.success === true) {
@@ -60,6 +77,7 @@ const AddEmployee = () => {
         }
       })
       .catch((error) => {
+        console.log(error);
         toast.error("Invalid data", {
           position: "bottom-right",
           autoClose: 5000,
@@ -74,17 +92,29 @@ const AddEmployee = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().min(3, "It too short").required("Enter full name"),
-    gender: Yup.string().required("Select gender"),
-    department: Yup.array().min(1).of(Yup.string().trim().required()),
-    salary: Yup.string().required("Enter salary"),
-    startDate: Yup.date().required("Enter StartDate").nullable(),
+    salary: Yup.number().required("Enter salary"),
     note: Yup.string().required("Enter note"),
   });
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    setUsers(userData);
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, checked } = e.target;
+    let tempUser = users.map((user) =>
+      user.name === name ? { ...user, isChecked: checked } : user
+    );
+    setUsers(tempUser);
+  };
+
   return (
     <Grid align="center">
       <Paper elevation={10} className="paperStyle">
         <Grid>
-          <Avatar className="avatarStyle"></Avatar>
+          <Avatar className="avatarContainer"></Avatar>
           <h2 className="headerStyle">Add Employee</h2>
         </Grid>
         <Formik
@@ -104,35 +134,62 @@ const AddEmployee = () => {
                 fullWidth
                 helperText={<ErrorMessage name="name" />}
               />
-              <Field
-                as={FormikControl}
-                control="radio"
-                label="Gender"
-                name="gender"
-                options={radioOptions}
-              />
-              <Field
-                as={FormikControl}
-                control="checkbox"
-                label="Department"
-                name="department"
-                options={checkboxOptions}
-              />
+              <Field as={FormControl} component="fieldset">
+                <FormLabel component="legend">Gender</FormLabel>
+                <RadioGroup row name="gender">
+                  {radioOptions.map((result) => (
+                    <FormControlLabel
+                      value={result.key}
+                      control={<Radio name="gender" />}
+                      label={result.key}
+                      helperText={<ErrorMessage name="gender" />}
+                    />
+                  ))}
+                </RadioGroup>
+              </Field>
+              <Field as={FormControl} component="fieldset">
+                <FormLabel component="legend">Department</FormLabel>
+                <FormGroup row>
+                  {users.map((result) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name={result.name}
+                          checked={result.isChecked ? true : false}
+                          control={<Checkbox />}
+                          onChange={handleChange}
+                          helperText={<ErrorMessage name="department" />}
+                        />
+                      }
+                      label={result.name}
+                    />
+                  ))}
+                </FormGroup>
+              </Field>
               <Field
                 as={TextField}
                 label="Salary"
                 name="salary"
+                type="number"
                 placeholder="Enter your Salary"
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 helperText={<ErrorMessage name="salary" />}
               />
-              <FormikControl
-                control="date"
-                label="Start Date"
-                name="startDate"
-              />
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Stack spacing={3}>
+                  <DesktopDatePicker
+                    name="startDate"
+                    label="Start Date"
+                    inputFormat="MM/dd/yyyy"
+                    value={setDateValue}
+                    onChange={handleChangeDate}
+                    defaultDate={setDateValue}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </Stack>
+              </LocalizationProvider>
               <Field
                 as={TextField}
                 label="Note"
