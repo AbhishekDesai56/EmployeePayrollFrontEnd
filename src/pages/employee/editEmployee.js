@@ -28,14 +28,14 @@ let initialValues = {
   note: "",
 };
 
-const AddEmployee = () => {
+const EditEmployee = () => {
   const [employee, setEmployee] = useState(initialValues);
+  const [users, setUsers] = useState([]);
   const { name, gender, department, salary, startDate, note } = employee;
   const { id } = useParams();
   const radioOptions = ["Male", "Female"];
-  const checkboxOptions = ["HR", "Sales", "Marketing", "Finance"];
   const history = useHistory();
-  const [setDateValue, setValue] = React.useState(new Date("30 Oct 2021"));
+  const [setDateValue, setValue] = React.useState(new Date());
 
   const handleChangeDate = (newValue) => {
     setValue(newValue);
@@ -44,8 +44,11 @@ const AddEmployee = () => {
   useEffect(() => {
     EmployeeService.getEmployeeId(id)
       .then((response) => {
+        console.log(response.data.data);
         setEmployee(response.data.data);
-        setValue(response.data.data.startDate);
+        setValue(new Date(response.data.data.startDate));
+        setUsers(response.data.data.department);
+        console.log(users);
       })
       .catch((error) => {
         toast.error("Invalid data", {
@@ -61,19 +64,6 @@ const AddEmployee = () => {
   }, [id]);
 
   const validateFunction = () => {
-    if (d.length === 0) {
-      toast.error("Select Department", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return false;
-    }
-
     if (employee.name === "") {
       toast.error("Enter Name", {
         position: "bottom-right",
@@ -103,15 +93,18 @@ const AddEmployee = () => {
   };
 
   const onSubmit = (values, props) => {
+    employee.department = users;
     let isValid = validateFunction();
     if (!isValid) return;
-    employee.department = d;
-    employee.startDate = setDateValue;
+
+    employee.startDate = format(setDateValue, "dd MMM yyyy");
     EmployeeService.updateEmployee(id, employee)
       .then((response) => {
         if (response.data.success === true) {
+          console.log("Getting Response");
+          console.log(response.data.message);
           toast.success(response.data.message, {
-            position: "bottoma-right",
+            position: "bottom-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -141,28 +134,22 @@ const AddEmployee = () => {
     setEmployee({ ...employee, [e.target.name]: e.target.value });
   };
 
-  let d = [];
   const handleChangeChecked = (event) => {
-    const index = d.indexOf(event.target.value);
-    if (event.target.checked) {
-      d.push(event.target.value);
-    } else {
-      d.splice(index, 1);
-    }
+    const { name, checked } = event.target;
+    let tempUser = users.map((user) =>
+      user.name === name ? { ...user, isChecked: checked } : user
+    );
+    setUsers(tempUser);
   };
 
   return (
     <Grid align="center">
       <Paper elevation={10} className="paperStyle">
         <Grid>
-          <Avatar className="avatarStyle"></Avatar>
+          <Avatar className="avatarContainer"></Avatar>
           <h2 className="headerStyle">Edit Employee</h2>
         </Grid>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          // validationSchema={validationSchema}
-        >
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
           {(props) => (
             <Form>
               <Field
@@ -175,7 +162,6 @@ const AddEmployee = () => {
                 onChange={(e) => onValueChange(e)}
                 name="name"
                 value={name}
-                // helperText={<ErrorMessage name="name" />}
               />
               <Field as={FormControl} component="fieldset">
                 <FormLabel component="legend">Gender</FormLabel>
@@ -187,7 +173,6 @@ const AddEmployee = () => {
                       label={result}
                       onChange={(e) => onValueChange(e)}
                       checked={result === gender}
-                      // helperText={<ErrorMessage name="gender" />}
                     />
                   ))}
                 </RadioGroup>
@@ -195,23 +180,17 @@ const AddEmployee = () => {
               <Field as={FormControl} component="fieldset">
                 <FormLabel component="legend">Department</FormLabel>
                 <FormGroup row>
-                  {checkboxOptions.map((result) => (
+                  {users.map((result) => (
                     <FormControlLabel
                       control={
                         <Checkbox
-                          value={result}
-                          name="department"
-                          defaultChecked={
-                            department.includes(result) ? true : false
-                          }
-                          //control={<Checkbox />}
-                          //onChange={(e) => onValueChange(e)}
-                          onChange={(e) => handleChangeChecked(e)}
-                          //checked={result.includes(department)}
-                          // helperText={<ErrorMessage name="department" />}
+                          name={result.name}
+                          checked={result.isChecked ? true : false}
+                          control={<Checkbox />}
+                          onChange={handleChangeChecked}
                         />
                       }
-                      label={result}
+                      label={result.name}
                     />
                   ))}
                 </FormGroup>
@@ -227,7 +206,6 @@ const AddEmployee = () => {
                 onChange={(e) => onValueChange(e)}
                 value={salary}
                 fullWidth
-                // helperText={<ErrorMessage name="salary" />}
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Stack spacing={3}>
@@ -252,7 +230,6 @@ const AddEmployee = () => {
                 onChange={(e) => onValueChange(e)}
                 value={note}
                 fullWidth
-                // helperText={<ErrorMessage name="note" />}
               />
               <Button
                 type="submit"
@@ -282,4 +259,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default EditEmployee;
