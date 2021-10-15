@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
+  let dept = [];
   useEffect(() => {
     getAllEmployees();
   }, []);
@@ -23,6 +24,7 @@ const EmployeeList = () => {
     await EmployeeService.getAllEmployees()
       .then((response) => {
         if (response.data.success === true) {
+          console.log(response.data.data[0].department);
           setEmployees(response.data.data);
         }
       })
@@ -82,7 +84,15 @@ const EmployeeList = () => {
               </StyledTableCell>
               <StyledTableCell align="right">{employee.gender}</StyledTableCell>
               <StyledTableCell align="right">
-                {employee.department}
+                {employee.department.forEach((element) =>
+                  element.isChecked
+                    ? dept.length === 0
+                      ? dept.push(element.name)
+                      : dept.push(`, ${element.name}`)
+                    : ""
+                )}
+                {dept}
+                {(dept = [])}
               </StyledTableCell>
               <StyledTableCell align="right">{employee.salary}</StyledTableCell>
               <StyledTableCell align="right">
