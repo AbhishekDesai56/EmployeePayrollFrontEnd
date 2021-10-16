@@ -92,7 +92,7 @@ const EmployeeList = () => {
                     : ""
                 )}
                 {dept}
-                {(dept = [])}
+                {dept.splice(0, dept.length)}
               </StyledTableCell>
               <StyledTableCell align="right">{employee.salary}</StyledTableCell>
               <StyledTableCell align="right">
