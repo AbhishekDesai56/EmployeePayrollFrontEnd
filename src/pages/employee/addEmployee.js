@@ -114,8 +114,10 @@ const AddEmployee = () => {
     <Grid align="center">
       <Paper elevation={10} className="paperStyle">
         <Grid>
-          <Avatar className="avatarContainer"></Avatar>
-          <h2 className="headerStyle">Add Employee</h2>
+          <Avatar className="avatarContainer" data-testid="avatar"></Avatar>
+          <h2 className="headerStyle" data-testid="header">
+            Add Employee
+          </h2>
         </Grid>
         <Formik
           initialValues={initialValues}
@@ -123,9 +125,10 @@ const AddEmployee = () => {
           validationSchema={validationSchema}
         >
           {(props) => (
-            <Form>
+            <Form data-testid="form">
               <Field
                 as={TextField}
+                data-testid="name"
                 label="Name"
                 name="name"
                 placeholder="Enter your Name"
@@ -136,7 +139,7 @@ const AddEmployee = () => {
               />
               <Field as={FormControl} component="fieldset">
                 <FormLabel component="legend">Gender</FormLabel>
-                <RadioGroup row name="gender">
+                <RadioGroup row name="gender" data-testid="gender">
                   {radioOptions.map((result) => (
                     <FormControlLabel
                       value={result.key}
@@ -149,7 +152,7 @@ const AddEmployee = () => {
               </Field>
               <Field as={FormControl} component="fieldset">
                 <FormLabel component="legend">Department</FormLabel>
-                <FormGroup row>
+                <FormGroup row data-testid="department">
                   {users.map((result) => (
                     <FormControlLabel
                       control={
@@ -168,6 +171,7 @@ const AddEmployee = () => {
               </Field>
               <Field
                 as={TextField}
+                data-testid="salary"
                 label="Salary"
                 name="salary"
                 type="number"
@@ -186,12 +190,15 @@ const AddEmployee = () => {
                     value={setDateValue}
                     onChange={handleChangeDate}
                     defaultDate={setDateValue}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                      <TextField {...params} data-testid="startDate" />
+                    )}
                   />
                 </Stack>
               </LocalizationProvider>
               <Field
                 as={TextField}
+                data-testid="note"
                 label="Note"
                 multiline
                 name="note"
@@ -202,6 +209,7 @@ const AddEmployee = () => {
                 helperText={<ErrorMessage name="note" />}
               />
               <Button
+                data-testid="submit"
                 type="submit"
                 className="btnStyle"
                 color="primary"
