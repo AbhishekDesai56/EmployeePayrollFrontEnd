@@ -19,7 +19,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import EmployeeList from "../../pages/employee/employeeList";
+import EmployeeList from "../employee/employeelist/employeeList";
 
 const drawerWidth = 220;
 
