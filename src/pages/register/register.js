@@ -81,10 +81,12 @@ const Register = () => {
     <Grid align="center">
       <Paper elevation={10} className="paperStyle">
         <Grid>
-          <Avatar className="avatarStyle">
+          <Avatar className="avatarStyle" data-testid="avatar">
             <AddCircleOutlineOutlinedIcon />
           </Avatar>
-          <h2 className="headerStyle">Sign Up</h2>
+          <h2 className="headerStyle" data-testid="header">
+            Sign Up
+          </h2>
           <Typography variant="caption" gutterBottom>
             Please fill this form to create an account !
           </Typography>
@@ -95,9 +97,10 @@ const Register = () => {
           validationSchema={validationSchema}
         >
           {(props) => (
-            <Form>
+            <Form data-testid="form">
               <Field
                 as={TextField}
+                data-testid="firstName"
                 label="First Name"
                 name="firstName"
                 placeholder="Enter your First Name"
@@ -108,6 +111,7 @@ const Register = () => {
               />
               <Field
                 as={TextField}
+                data-testid="lastName"
                 label="Last Name"
                 name="lastName"
                 placeholder="Enter your Last Name"
@@ -118,6 +122,7 @@ const Register = () => {
               />
               <Field
                 as={TextField}
+                data-testid="email"
                 label="Email"
                 name="email"
                 placeholder="Enter your Email Id"
@@ -128,6 +133,7 @@ const Register = () => {
               />
               <Field
                 as={TextField}
+                data-testid="password"
                 label="Password"
                 name="password"
                 placeholder="Enter your Password"
@@ -139,6 +145,7 @@ const Register = () => {
               />
               <Field
                 as={TextField}
+                data-testid="confirmPassword"
                 label="Confirm Password"
                 name="confirmPassword"
                 placeholder="Enter your Confirm Password"
@@ -149,6 +156,7 @@ const Register = () => {
                 helperText={<ErrorMessage name="confirmPassword" />}
               />
               <Button
+                data-testid="submit"
                 type="submit"
                 className="btnStyle"
                 color="primary"
