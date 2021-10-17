@@ -71,10 +71,10 @@ const Login = () => {
     <Grid>
       <Paper elevation={10} className="loginContainer">
         <Grid align="center">
-          <Avatar className="avatarContainer">
+          <Avatar className="avatarContainer" data-testid="avatar">
             <LockOutlinedIcon />
           </Avatar>
-          <h2>Sign In</h2>
+          <h2 data-testid="header">Sign In</h2>
         </Grid>
 
         <Formik
@@ -83,10 +83,12 @@ const Login = () => {
           validationSchema={validationSchema}
         >
           {(props) => (
-            <Form>
+            <Form data-testid="form">
               <Field
                 as={TextField}
+                id="Email"
                 label="Email"
+                data-testid="email"
                 name="email"
                 placeholder="Enter your Email Id"
                 variant="outlined"
@@ -97,6 +99,8 @@ const Login = () => {
               <Field
                 as={TextField}
                 label="Password"
+                id="Password"
+                data-testid="password"
                 name="password"
                 placeholder="Enter your Password"
                 type="password"
@@ -107,10 +111,12 @@ const Login = () => {
               />
               <Button
                 type="submit"
+                id="button"
                 className="btnStyle"
                 color="primary"
                 variant="contained"
                 fullWidth
+                data-testid="button"
               >
                 Sign In
               </Button>
