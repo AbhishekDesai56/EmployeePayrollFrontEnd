@@ -2,8 +2,8 @@ import "./App.scss";
 import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import Dashboard from "./pages/dashboard/dashboard";
-import AddEmployee from "./pages/employee/addEmployee";
-import EditEmployee from "./pages/employee/editEmployee";
+import AddEmployee from "../src/pages/employee/addemployee/addEmployee";
+import EditEmployee from "../src/pages/employee/editemployee/editEmployee";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ProtectedRoute } from "../src/components/protected.route";
 
