@@ -175,6 +175,15 @@ const AddEmployee = () => {
                 label="Salary"
                 name="salary"
                 type="number"
+                value={props.salary}
+                onChange={(e) => {
+                  e.preventDefault();
+                  const { value } = e.target;
+                  const regex = /^([0-9])$/;
+                  if (regex.test(value.toString())) {
+                    props.setFieldValue("salary", value);
+                  }
+                }}
                 placeholder="Enter your Salary"
                 variant="outlined"
                 margin="normal"
@@ -200,11 +209,12 @@ const AddEmployee = () => {
                 as={TextField}
                 data-testid="note"
                 label="Note"
-                multiline
                 name="note"
                 placeholder="Enter your Note"
                 variant="outlined"
                 margin="normal"
+                rows={4}
+                multiline
                 fullWidth
                 helperText={<ErrorMessage name="note" />}
               />
