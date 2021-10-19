@@ -12,6 +12,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import Paper from "@mui/material/Paper";
 import EmployeeService from "../../../services/employee.service";
 import { Link } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import "../../employee/employee.scss";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -98,7 +100,11 @@ const EmployeeList = () => {
               <StyledTableCell align="right">
                 {employee.startDate}
               </StyledTableCell>
-              <StyledTableCell align="right">{employee.note}</StyledTableCell>
+              <Tooltip title={employee.note}>
+                <StyledTableCell align="right" className="descriptionCell">
+                  {employee.note}
+                </StyledTableCell>
+              </Tooltip>
               <StyledTableCell align="right">
                 <Button component={Link} to={`editemployee/${employee._id}`}>
                   <EditIcon />
