@@ -229,13 +229,14 @@ const EditEmployee = () => {
                 as={TextField}
                 data-testid="note"
                 label="Note"
-                multiline
                 name="note"
                 placeholder="Enter your Note"
                 variant="outlined"
                 margin="normal"
                 onChange={(e) => onValueChange(e)}
                 value={note}
+                rows={4}
+                multiline
                 fullWidth
               />
               <Button
