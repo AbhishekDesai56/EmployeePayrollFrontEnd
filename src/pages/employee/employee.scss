@@ -1,6 +1,6 @@
 .paperStyle {
   padding: 20px;
-  height: 110vh;
+  height: 112vh;
   width: 500px;
   margin: 20px auto;
 }
@@ -27,4 +27,12 @@ input + label {
 
 .avatarContainer {
   background-color: #1bbd7e !important;
+}
+
+.descriptionCell {
+  white-space: nowrap;
+  max-width: 200px;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
