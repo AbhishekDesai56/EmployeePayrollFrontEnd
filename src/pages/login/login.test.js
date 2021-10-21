@@ -3,94 +3,145 @@ import Login from "./login";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import sinon from "sinon";
-import { configure } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-configure({ adapter: new Adapter() });
+import Enzyme from "enzyme";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
-test("header render with correct text", () => {
-  const { getByTestId } = render(<Login />);
-  const headerEl = getByTestId("header");
-  expect(headerEl.textContent).toBe("Sign In");
+Enzyme.configure({ adapter: new Adapter() });
+
+const findByDataAttr = (component, attr) => {
+  return component.find(`[data-test='${attr}']`);
+};
+
+const wait = (timeout) =>
+  new Promise((resolve) => setTimeout(resolve, timeout));
+
+const updateFormikField = async (nativeFieldWrapper, targetName, value) => {
+  // simulate focus event
+  await act(async () => {
+    nativeFieldWrapper.simulate("focus");
+  });
+  // updates values and errors
+  await act(async () => {
+    nativeFieldWrapper.simulate("change", {
+      persist: () => {},
+      target: { name: targetName, value },
+    });
+  });
+  // updates touched
+  await act(async () => {
+    nativeFieldWrapper.simulate("blur", {
+      persist: () => {},
+      target: { name: targetName },
+    });
+  });
+
+  await wait(0);
+};
+
+const submitFormikForm = async (nativeFormWrapper, elements = {}) => {
+  await act(async () => {
+    nativeFormWrapper.simulate("submit", {
+      preventDefault: () => {},
+      ...elements,
+    });
+  });
+  await wait(0);
+};
+
+describe("LoginIn Component", () => {
+  let component;
+
+  beforeEach(() => {
+    component = mount(<Login />);
+  });
+  it("should have email input field", () => {
+    const emailCheck = findByDataAttr(component, "emailInput"); //toBe just checks that a value is what you expect. It uses === to check strict equality.
+    // console.log(emailCheck.debug());
+    expect(emailCheck.length).toBe(6);
+  });
+
+  it("should have password input field", () => {
+    const passwordCheck = findByDataAttr(component, "passwordInput");
+    expect(passwordCheck.length).toBe(6);
+  });
+
+  it("should have submit button", () => {
+    const submitCheck = findByDataAttr(component, "submitButton");
+    expect(submitCheck.length).toBe(6);
+  });
 });
 
-test("check if component is display properly", () => {
-  const { getByTestId } = render(<Login />);
-  const avatarEl = getByTestId("avatar");
-  const formEl = getByTestId("form");
-  expect(avatarEl).toBeInTheDocument();
-  expect(formEl).toBeInTheDocument();
-});
+describe("Components Test", () => {
+  let component;
 
-test("login input with correct text field", () => {
-  const { getByTestId } = render(<Login />);
-  const emailField = getByTestId("email");
-  const passwordField = getByTestId("password");
+  beforeEach(() => {
+    component = mount(<Login />);
+  });
 
-  expect(emailField).toBeInTheDocument();
-  expect(passwordField).toBeInTheDocument();
-});
+  it("should error if filled invaild value in email input", async () => {
+    const emailInput = component.find(`input[name="email"]`).first();
+    await updateFormikField(emailInput, "email", "invalidEmail");
+    emailInput.update();
+    const formikEmailInput = findByDataAttr(component, "emailInput").first();
+    //console.log(formikEmailInput.debug());
+    expect(formikEmailInput.props().helperText).toEqual("Enter a mail");
+  });
 
-// it("simulates click events", () => {
-//   const onButtonClick = sinon.spy();
-//   const wrapper = shallow(<Login onButtonClick={onButtonClick} />);
-//   wrapper.find("button").simulate("click");
-//   expect(onButtonClick).to.have.property("callCount", 1);
-// });
-// describe("SignIn", () => {
-//   describe("with valid input", () => {
-//     test("calls the onSubmit function", async () => {
-//       const mockOnSubmit = jest.fn();
-//       const { getByLabelText, getByRole } = render(
-//         <Login onSubmit={mockOnSubmit} />
-//       );
-
-//       await act(async () => {
-//         fireEvent.change(getByLabelText("Email"), {
-//           target: { value: "bellb@gmail.com" },
-//         });
-//         fireEvent.change(getByLabelText("Password"), {
-//           target: { value: "123456789" },
-//         });
-//       });
-
-//       await act(async () => {
-//         fireEvent.click(getByRole("button"));
-//       });
-
-//       expect(mockOnSubmit).not.toHaveBeenCalled();
-//     });
-//   });
-// });
-describe("Test case for testing login", () => {
-  // const state = { email: "bellb@gmail.com", password: "123456789" };
-
-  // const props = {
-  //   email: state.email,
-  //   password: state.password,
-  //   onChange: (e) => {
-  //     state[e.target.name] = e.target.value;
-  //   },
-  // };
-  const wrapper = shallow(<Login />);
-
-  it("Get Test of the form", () => {
-    expect(wrapper.text()).toEqual(
-      "Sign In<Formik /> Do you have an account?Sign Up<ToastContainer />"
+  it("should error if empty value in email input", async () => {
+    const emailInput = component.find(`input[name="email"]`).first();
+    await updateFormikField(emailInput, "email", "");
+    emailInput.update();
+    const formikEmailInput = findByDataAttr(component, "emailInput").first();
+    // console.log(formikEmailInput.debug());
+    expect(formikEmailInput.props().helperText).toEqual(
+      "email is a required field"
     );
   });
-  it("checking Formik Tag is present or not", () => {
-    expect(wrapper.find("Formik").text()).toEqual("<Formik />");
+
+  it("should not have error if valid email value", async () => {
+    const emailInput = component.find(`input[name="email"]`).first();
+    await updateFormikField(emailInput, "email", "bellb@gmail.com");
+    emailInput.update();
+    const formikEmailInput = findByDataAttr(component, "emailInput").first();
+    //console.log(formikEmailInput.debug());
+    expect(formikEmailInput.props().error).toBeUndefined();
   });
 
-  it("simulate email field", () => {
-    const { getByTestId } = render(<Login />);
-    const emailField = getByTestId("email");
-    wrapper.find(emailField).simulate("change", {
-      target: { name: "email", value: "bellb@gmail.com" },
+  describe("Form Submit tests", () => {
+    let component;
+    const onLogin = jest.fn();
+    beforeEach(() => {
+      component = mount(<Login onSubmit={onLogin} />);
     });
-    expect(wrapper.state("Login.email")).toEqual("bellb@gmail.com");
+
+    it("should not submit form if email and password are invalid", async () => {
+      const form = component.find(`form`).first();
+      const emailInput = component.find(`input[name="email"]`).first();
+      const passInput = component.find(`input[name="password"]`).first();
+      await updateFormikField(emailInput, "email", "");
+      await updateFormikField(passInput, "password", "");
+      emailInput.update();
+      passInput.update();
+      await submitFormikForm(form);
+      expect(onLogin).toHaveBeenCalledTimes(1); //Use .toHaveBeenCalledTimes to ensure that a mock function got called exact number of times.
+    });
+
+    it("should submit form if email and password are valid", async () => {
+      const form = component.find(`form`).first();
+      await submitFormikForm(form, {
+        elements: { email: "bellb@gmail.com", password: "123456789" },
+      });
+      expect(onLogin).toHaveBeenCalledTimes(1);
+    });
   });
-  //expect(wrapper.find("input").at(1).prop("value")).toEqual("123456789");
+  it("should error if password input is empty", async () => {
+    const passInput = component.find(`input[name="password"]`).first();
+    await updateFormikField(passInput, "password", "");
+    passInput.update();
+    const formikPassInput = findByDataAttr(component, "passwordInput").first();
+    //console.log(formikPassInput.debug());
+    expect(formikPassInput.props().helperText).toContain("Please a password");
+  });
 });
